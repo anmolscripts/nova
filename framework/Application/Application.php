@@ -4,6 +4,14 @@ declare(strict_types=1);
 
 namespace Nova\Application;
 
+use Nova\App\Page;
+use Nova\App\PageDiscovery;
+use Nova\App\PageRenderer;
+use Nova\App\Layout;
+use Nova\App\LayoutEngine;
+use Nova\Component\Component;
+use Nova\Component\ComponentDiscovery;
+use Nova\Component\ComponentEngine;
 use Nova\Config\Repository as ConfigRepository;
 use Nova\Container\Container;
 use Nova\Database\DatabaseManager;
@@ -15,11 +23,16 @@ use Nova\Session\SessionManager;
 use Nova\Support\Cache;
 use Nova\Support\Logger;
 use Nova\View\ViewFactory;
+use Nova\View\Asset;
+use Nova\View\LatteEngine;
 
 final class Application extends Container
 {
     private ConfigRepository $config;
     private ?Request $request = null;
+    private ?Page $currentPage = null;
+    private ?Layout $currentLayout = null;
+    private ?Component $currentComponent = null;
 
     public function __construct(private readonly string $basePath)
     {
@@ -36,7 +49,14 @@ final class Application extends Container
         date_default_timezone_set((string) $this->config->get('app.timezone', 'UTC'));
 
         $this->singleton(ConfigRepository::class, fn () => $this->config);
+        $this->singleton(PageDiscovery::class, fn () => new PageDiscovery($this));
+        $this->singleton(LayoutEngine::class, fn () => new LayoutEngine($this));
+        $this->singleton(PageRenderer::class, fn () => new PageRenderer($this));
+        $this->singleton(ComponentDiscovery::class, fn () => new ComponentDiscovery($this));
+        $this->singleton(ComponentEngine::class, fn () => new ComponentEngine($this));
         $this->singleton(Router::class, fn () => new Router($this));
+        $this->singleton(Asset::class, fn () => new Asset($this));
+        $this->singleton(LatteEngine::class, fn () => new LatteEngine($this, $this->make(Asset::class)));
         $this->singleton(ViewFactory::class, fn () => new ViewFactory($this));
         $this->singleton(SessionManager::class, fn () => new SessionManager($this->config->get('session', []), $this->storagePath('sessions')));
         $this->singleton(Csrf::class, fn () => new Csrf($this->session()));
@@ -69,6 +89,36 @@ final class Application extends Container
     public function request(): Request
     {
         return $this->request ?? Request::capture();
+    }
+
+    public function setCurrentPage(Page $page): void
+    {
+        $this->currentPage = $page;
+    }
+
+    public function currentPage(): ?Page
+    {
+        return $this->currentPage;
+    }
+
+    public function setCurrentLayout(Layout $layout): void
+    {
+        $this->currentLayout = $layout;
+    }
+
+    public function currentLayout(): ?Layout
+    {
+        return $this->currentLayout;
+    }
+
+    public function setCurrentComponent(?Component $component): void
+    {
+        $this->currentComponent = $component;
+    }
+
+    public function currentComponent(): ?Component
+    {
+        return $this->currentComponent;
     }
 
     public function view(): ViewFactory

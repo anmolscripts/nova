@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Nova\Routing;
 
+use Nova\App\PageRenderer;
 use Nova\Application\Application;
 use Nova\Http\Request;
 use Nova\Http\Response;
@@ -21,6 +22,10 @@ final class Router
 
     public function dispatch(Request $request): Response
     {
+        if (!str_starts_with($request->path(), '/api/')) {
+            return $this->dispatchPage($request);
+        }
+
         $route = $this->match($request);
         if (!$route) {
             abort(404);
@@ -35,6 +40,19 @@ final class Router
             ->send($request)
             ->through($middleware)
             ->then(fn () => $this->runRoute($route, $params, $request));
+    }
+
+    private function dispatchPage(Request $request): Response
+    {
+        $match = (new RouteMatcher($this->app))->match($request->path());
+
+        if (!$match) {
+            abort(404);
+        }
+
+        $request->setRouteParams($match->parameters);
+
+        return $this->app->make(PageRenderer::class)->render($match->page, $match->parameters);
     }
 
     public function all(): array

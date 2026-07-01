@@ -3,7 +3,8 @@
   "description": "A lightweight file-based full stack PHP framework for shared hosting.",
   "type": "project",
   "require": {
-    "php": "^8.3"
+    "php": "^8.3",
+    "latte/latte": "^3.1"
   },
   "autoload": {
     "psr-4": {

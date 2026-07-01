@@ -1,0 +1,128 @@
+{
+  "app/about/page.scss": {
+    "file": "app/about/page-TYQZpQUk.css",
+    "name": "app/about/page.scss",
+    "names": [
+      "app/about/page.css"
+    ],
+    "src": "app/about/page.scss",
+    "isEntry": true
+  },
+  "app/about/page.ts": {
+    "file": "app/about/page.ts-CfLmKJUr.js",
+    "name": "app/about/page.ts",
+    "src": "app/about/page.ts",
+    "isEntry": true
+  },
+  "app/dashboard/components/StatsCard/component.scss": {
+    "file": "app/dashboard/components/StatsCard/component-Dq3XLly0.css",
+    "name": "app/dashboard/components/StatsCard/component.scss",
+    "names": [
+      "app/dashboard/components/StatsCard/component.css"
+    ],
+    "src": "app/dashboard/components/StatsCard/component.scss",
+    "isEntry": true
+  },
+  "app/dashboard/components/StatsCard/component.ts": {
+    "file": "app/dashboard/components/StatsCard/component.ts-CVatPfbj.js",
+    "name": "app/dashboard/components/StatsCard/component.ts",
+    "src": "app/dashboard/components/StatsCard/component.ts",
+    "isEntry": true
+  },
+  "app/page.scss": {
+    "file": "app/page-B6MB3gDP.css",
+    "name": "app/page.scss",
+    "names": [
+      "app/page.css"
+    ],
+    "src": "app/page.scss",
+    "isEntry": true
+  },
+  "app/page.ts": {
+    "file": "app/page.ts-BkCGKNYA.js",
+    "name": "app/page.ts",
+    "src": "app/page.ts",
+    "isEntry": true
+  },
+  "app/users/[id]/page.scss": {
+    "file": "app/users/_id_/page-D_uJuN2E.css",
+    "name": "app/users/_id_/page.scss",
+    "names": [
+      "app/users/_id_/page.css"
+    ],
+    "src": "app/users/[id]/page.scss",
+    "isEntry": true
+  },
+  "app/users/[id]/page.ts": {
+    "file": "app/users/_id_/page.ts-DMFc3Li_.js",
+    "name": "app/users/_id_/page.ts",
+    "src": "app/users/[id]/page.ts",
+    "isEntry": true
+  },
+  "app/users/page.scss": {
+    "file": "app/users/page-CtT7zgaQ.css",
+    "name": "app/users/page.scss",
+    "names": [
+      "app/users/page.css"
+    ],
+    "src": "app/users/page.scss",
+    "isEntry": true
+  },
+  "components/Button/component.scss": {
+    "file": "components/Button/component-Br3m8HST.css",
+    "name": "components/Button/component.scss",
+    "names": [
+      "components/Button/component.css"
+    ],
+    "src": "components/Button/component.scss",
+    "isEntry": true
+  },
+  "components/Button/component.ts": {
+    "file": "components/Button/component.ts-Chihlmz9.js",
+    "name": "components/Button/component.ts",
+    "src": "components/Button/component.ts",
+    "isEntry": true
+  },
+  "components/Card/component.scss": {
+    "file": "components/Card/component-CWyAi3e2.css",
+    "name": "components/Card/component.scss",
+    "names": [
+      "components/Card/component.css"
+    ],
+    "src": "components/Card/component.scss",
+    "isEntry": true
+  },
+  "components/Icon/component.scss": {
+    "file": "components/Icon/component-NiSla80p.css",
+    "name": "components/Icon/component.scss",
+    "names": [
+      "components/Icon/component.css"
+    ],
+    "src": "components/Icon/component.scss",
+    "isEntry": true
+  },
+  "components/StatsCard/component.scss": {
+    "file": "components/StatsCard/component-Bjd3MJpR.css",
+    "name": "components/StatsCard/component.scss",
+    "names": [
+      "components/StatsCard/component.css"
+    ],
+    "src": "components/StatsCard/component.scss",
+    "isEntry": true
+  },
+  "resources/scss/app.scss": {
+    "file": "styles-CDw5EeeU.css",
+    "name": "styles",
+    "names": [
+      "styles.css"
+    ],
+    "src": "resources/scss/app.scss",
+    "isEntry": true
+  },
+  "resources/ts/app.ts": {
+    "file": "app-BATBt8hA.js",
+    "name": "app",
+    "src": "resources/ts/app.ts",
+    "isEntry": true
+  }
+}

@@ -24,6 +24,8 @@ final class Csrf
 
     public function verify(string $token): bool
     {
-        return hash_equals((string) $this->session->get('_token', ''), $token);
+        $stored = (string) $this->session->get('_token', '');
+
+        return $stored !== '' && $token !== '' && hash_equals($stored, $token);
     }
 }

@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Nova\\' => array($baseDir . '/framework'),
+    'Latte\\' => array($vendorDir . '/latte/latte/src/Latte'),
 );

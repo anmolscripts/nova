@@ -14,7 +14,9 @@ final class VerifyCsrfToken
             return $next($request);
         }
 
-        if (!app()->csrf()->verify((string) $request->input('_token', ''))) {
+        $token = (string) ($request->input('_token') ?? $request->header('X-CSRF-Token', ''));
+
+        if (!app()->csrf()->verify($token)) {
             abort(419, 'Invalid CSRF token.');
         }
 

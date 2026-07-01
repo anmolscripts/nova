@@ -6,6 +6,8 @@ namespace Nova\Session;
 
 final class SessionManager
 {
+    private const SENSITIVE_OLD_INPUT = ['password', 'password_confirmation'];
+
     public function __construct(private readonly array $config, private readonly string $path)
     {
     }
@@ -39,6 +41,10 @@ final class SessionManager
 
     public function put(string $key, mixed $value): void
     {
+        if ($key === '_old_input' && is_array($value)) {
+            $value = array_diff_key($value, array_flip(self::SENSITIVE_OLD_INPUT));
+        }
+
         $_SESSION[$key] = $value;
     }
 
@@ -50,6 +56,15 @@ final class SessionManager
     public function regenerate(): void
     {
         session_regenerate_id(true);
+    }
+
+    public function destroy(): void
+    {
+        $_SESSION = [];
+
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_destroy();
+        }
     }
 
     public function flash(string $key, mixed $value = null): mixed

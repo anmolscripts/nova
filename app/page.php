@@ -1,6 +1,8 @@
 <?php
 
-return view('welcome', [
-    'title' => 'Nova is running',
-    'message' => 'Create files in app/ to add pages, or files in api/ to add JSON endpoints.',
-]);
+declare(strict_types=1);
+
+return [
+    'title' => 'Hello Nova',
+    'message' => 'Nova App Engine is rendering this page from app/page.latte.',
+];

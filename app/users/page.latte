@@ -1,0 +1,14 @@
+<form action="/users/actions/save" method="POST">
+    {csrf_field()|noescape}
+    <label>
+        Name
+        <input name="name" value="{old('name')}" required>
+    </label>
+    <button type="submit">Save</button>
+</form>
+
+<ul class="users-list">
+    {foreach $users as $user}
+        <li><a href="/users/{$user['id']}">{$user['name']}</a></li>
+    {/foreach}
+</ul>

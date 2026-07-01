@@ -6,5 +6,6 @@ return [
     'global' => [
         \Nova\Middleware\StartSession::class,
         \Nova\Middleware\VerifyCsrfToken::class,
+        \Nova\Middleware\DispatchServerAction::class,
     ],
 ];

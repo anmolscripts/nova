@@ -1,0 +1,19 @@
+.nova-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 6px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.nova-button-primary {
+  background: #0f766e;
+  color: #ffffff;
+}
+
+.nova-button-secondary {
+  background: #ecebe5;
+  color: #181816;
+}

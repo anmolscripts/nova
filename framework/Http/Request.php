@@ -50,6 +50,38 @@ final class Request
         return $key === null ? $data : Arr::get($data, $key, $default);
     }
 
+    public function all(): array
+    {
+        return $this->input();
+    }
+
+    public function only(array|string $keys): array
+    {
+        $keys = is_array($keys) ? $keys : func_get_args();
+        $data = [];
+
+        foreach ($keys as $key) {
+            $data[$key] = $this->input((string) $key);
+        }
+
+        return $data;
+    }
+
+    public function except(array|string $keys): array
+    {
+        $keys = array_flip(is_array($keys) ? $keys : func_get_args());
+
+        return array_diff_key($this->all(), $keys);
+    }
+
+    public function json(?string $key = null, mixed $default = null): mixed
+    {
+        $contentType = $this->server['CONTENT_TYPE'] ?? '';
+        $data = str_contains($contentType, 'application/json') ? $this->body : [];
+
+        return $key === null ? $data : Arr::get($data, $key, $default);
+    }
+
     public function query(?string $key = null, mixed $default = null): mixed
     {
         return $key === null ? $this->query : Arr::get($this->query, $key, $default);
@@ -58,6 +90,13 @@ final class Request
     public function cookie(string $key, mixed $default = null): mixed
     {
         return $this->cookies[$key] ?? $default;
+    }
+
+    public function header(string $key, mixed $default = null): mixed
+    {
+        $serverKey = 'HTTP_' . strtoupper(str_replace('-', '_', $key));
+
+        return $this->server[$serverKey] ?? $this->server[strtoupper(str_replace('-', '_', $key))] ?? $default;
     }
 
     public function file(string $key): UploadedFile|array|null
@@ -70,6 +109,11 @@ final class Request
         return $this->routeParams[$key] ?? $default;
     }
 
+    public function routeParams(): array
+    {
+        return $this->routeParams;
+    }
+
     public function setRouteParams(array $params): void
     {
         $this->routeParams = $params;
@@ -78,7 +122,13 @@ final class Request
     public function expectsJson(): bool
     {
         $accept = $this->server['HTTP_ACCEPT'] ?? '';
-        return str_contains($accept, 'application/json') || str_starts_with($this->path(), '/api/');
+        $requestedWith = $this->server['HTTP_X_REQUESTED_WITH'] ?? '';
+        $contentType = $this->server['CONTENT_TYPE'] ?? '';
+
+        return str_contains($accept, 'application/json')
+            || strcasecmp($requestedWith, 'XMLHttpRequest') === 0
+            || str_contains($contentType, 'application/json')
+            || str_starts_with($this->path(), '/api/');
     }
 
     private static function jsonBody(): array

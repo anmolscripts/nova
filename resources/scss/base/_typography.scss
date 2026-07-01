@@ -1,0 +1,15 @@
+@use '../abstracts/variables' as *;
+
+:root {
+  color-scheme: light;
+  font-family: $font-family-base;
+}
+
+body {
+  background: $color-background;
+  color: $color-text;
+}
+
+a {
+  color: $color-accent;
+}

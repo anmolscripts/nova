@@ -14,6 +14,10 @@ final class ViewFactory
 
     public function render(string $name, array $data = []): string
     {
+        if ($this->app->make(LatteEngine::class)->exists($name)) {
+            return $this->app->make(LatteEngine::class)->render($name, $data);
+        }
+
         $path = $this->resolve($name);
         $compiled = $this->compile($path);
         return $this->include($compiled, $data);
