@@ -386,18 +386,15 @@ All shipped as installable extensions.
 
 ---
 
-# Documentation
+# 📚 Documentation
 
-The documentation is divided into several books.
+Start here if you're new to Nova.
 
-| Book | Description |
-|------|-------------|
-| Zero to Hero | Learn Nova by building a real application |
-| User Guide | Complete framework documentation |
-| API Reference | Every helper and class |
-| Architecture Guide | Framework internals |
-| Extension Guide | Build Nova extensions |
-
+- 📖 [Learn Nova (Zero to Hero)](docs/getting-started/README.md)
+- 📘 [Nova Handbook](docs/handbook/README.md)
+- 🏗️ [Architecture Guide](docs/architecture/README.md)
+- 📑 [API Reference](docs/api/helpers.md)
+- 🔌 [Extension Development](docs/extension-development/README.md)
 ---
 
 # Contributing

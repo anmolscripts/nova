@@ -108,6 +108,18 @@
         |-- .gitkeep
 |-- docs
     |-- API_REVIEW.md
+    |-- getting-started
+        |-- authentication.md
+        |-- components.md
+        |-- database.md
+        |-- deployment.md
+        |-- first-page.md
+        |-- installation.md
+        |-- layouts.md
+        |-- project-structure.md
+        |-- README.md
+        |-- server-actions.md
+    |-- README.md
 |-- framework
     |-- Action
         |-- Action.php
