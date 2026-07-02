@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Nova\Support;
 
+/**
+ * Provides helpers for nested array access.
+ */
 final class Arr
 {
     public static function get(array|object|null $target, string $key, mixed $default = null): mixed

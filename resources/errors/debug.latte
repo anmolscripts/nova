@@ -1,0 +1,20 @@
+{layout none}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{$status} - {$exception->getMessage()}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; color: #111; }
+        code { background: #f4f4f4; padding: 0.1rem 0.3rem; }
+        pre { white-space: pre-wrap; background: #f4f4f4; padding: 1rem; overflow: auto; }
+    </style>
+</head>
+<body>
+    <h1>{$status} - {$exception::class}</h1>
+    <p><strong>Message:</strong> {$exception->getMessage()}</p>
+    <p><strong>Request:</strong> {$request->method()} {$request->path()}</p>
+    <p><strong>Environment:</strong> {$environment}</p>
+    <pre>{$exception->getTraceAsString()}</pre>
+</body>
+</html>

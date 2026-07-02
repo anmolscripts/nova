@@ -10,6 +10,9 @@ use Nova\Http\Request;
 use Nova\Http\Response;
 use Nova\Middleware\Pipeline;
 
+/**
+ * Dispatches matched routes to handlers.
+ */
 final class Router
 {
     /** @var Route[] */
@@ -73,7 +76,7 @@ final class Router
             return url($path);
         }
 
-        throw new \InvalidArgumentException("Route [{$name}] not found.");
+        throw new RoutingException("Route [{$name}] not found.");
     }
 
     private function match(Request $request): ?Route
@@ -136,7 +139,12 @@ final class Router
     {
         extract($data, EXTR_SKIP);
         ob_start();
-        require $file;
-        return (string) ob_get_clean();
+        try {
+            require $file;
+            return (string) ob_get_clean();
+        } catch (\Throwable $throwable) {
+            ob_end_clean();
+            throw $throwable;
+        }
     }
 }

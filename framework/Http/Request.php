@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Nova\Http;
 
+use Nova\Storage\UploadFile;
 use Nova\Support\Arr;
 
+/**
+ * Represents the current HTTP request.
+ */
 final class Request
 {
     public function __construct(
@@ -99,7 +103,7 @@ final class Request
         return $this->server[$serverKey] ?? $this->server[strtoupper(str_replace('-', '_', $key))] ?? $default;
     }
 
-    public function file(string $key): UploadedFile|array|null
+    public function file(string $key): UploadFile|array|null
     {
         return $this->files[$key] ?? null;
     }
@@ -148,11 +152,11 @@ final class Request
             if (is_array($file['name'])) {
                 $normalized[$key] = [];
                 foreach ($file['name'] as $index => $name) {
-                    $normalized[$key][$index] = new UploadedFile($name, $file['tmp_name'][$index], $file['type'][$index], $file['error'][$index], $file['size'][$index]);
+                    $normalized[$key][$index] = new UploadFile($name, $file['tmp_name'][$index], $file['type'][$index], $file['error'][$index], $file['size'][$index]);
                 }
                 continue;
             }
-            $normalized[$key] = new UploadedFile($file['name'], $file['tmp_name'], $file['type'], $file['error'], $file['size']);
+            $normalized[$key] = new UploadFile($file['name'], $file['tmp_name'], $file['type'], $file['error'], $file['size']);
         }
         return $normalized;
     }

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Nova\Validation;
 
+/**
+ * Reads validation errors by field.
+ */
 final class ErrorBag
 {
     public function __construct(private readonly array $errors = [])

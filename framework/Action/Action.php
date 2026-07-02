@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Nova\Action;
 
+/**
+ * Describes a discovered server action endpoint.
+ */
 final class Action
 {
     public function __construct(

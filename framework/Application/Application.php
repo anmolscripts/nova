@@ -12,6 +12,7 @@ use Nova\App\LayoutEngine;
 use Nova\Component\Component;
 use Nova\Component\ComponentDiscovery;
 use Nova\Component\ComponentEngine;
+use Nova\Config\ConfigLoader;
 use Nova\Config\Repository as ConfigRepository;
 use Nova\Container\Container;
 use Nova\Database\DatabaseManager;
@@ -20,12 +21,17 @@ use Nova\Routing\Router;
 use Nova\Security\AuthManager;
 use Nova\Security\Csrf;
 use Nova\Session\SessionManager;
+use Nova\Storage\StorageManager;
 use Nova\Support\Cache;
 use Nova\Support\Logger;
+use Nova\Support\Profiler;
 use Nova\View\ViewFactory;
 use Nova\View\Asset;
 use Nova\View\LatteEngine;
 
+/**
+ * Bootstraps and exposes the Nova application container.
+ */
 final class Application extends Container
 {
     private ConfigRepository $config;
@@ -49,6 +55,7 @@ final class Application extends Container
         date_default_timezone_set((string) $this->config->get('app.timezone', 'UTC'));
 
         $this->singleton(ConfigRepository::class, fn () => $this->config);
+        $this->singleton(Profiler::class, fn () => new Profiler($this));
         $this->singleton(PageDiscovery::class, fn () => new PageDiscovery($this));
         $this->singleton(LayoutEngine::class, fn () => new LayoutEngine($this));
         $this->singleton(PageRenderer::class, fn () => new PageRenderer($this));
@@ -63,6 +70,9 @@ final class Application extends Container
         $this->singleton(DatabaseManager::class, fn () => new DatabaseManager($this->config->get('database', [])));
         $this->singleton(AuthManager::class, fn () => new AuthManager($this));
         $this->singleton(Cache::class, fn () => new Cache($this->config->get('cache.path', $this->storagePath('cache'))));
+        $this->singleton(StorageManager::class, fn () => new StorageManager($this));
+        $this->ensureStorageDirectories();
+        $this->cleanupTemporaryStorage();
     }
 
     public function basePath(string $path = ''): string
@@ -146,9 +156,19 @@ final class Application extends Container
         return $this->make(Cache::class);
     }
 
+    public function storage(): StorageManager
+    {
+        return $this->make(StorageManager::class);
+    }
+
     public function logger(?string $channel = null): Logger
     {
         return new Logger($this->storagePath('logs/' . ($channel ?: 'app') . '.log'));
+    }
+
+    public function profiler(): Profiler
+    {
+        return $this->make(Profiler::class);
     }
 
     private function loadEnvironment(): void
@@ -173,18 +193,38 @@ final class Application extends Container
         }
     }
 
+    private function ensureStorageDirectories(): void
+    {
+        foreach (['app', 'public', 'temporary', 'uploads'] as $directory) {
+            $path = $this->storagePath($directory);
+            if (!is_dir($path)) {
+                mkdir($path, 0775, true);
+            }
+        }
+
+        $publicStorage = $this->basePath('public/storage');
+        if (!is_dir($publicStorage)) {
+            $target = $this->storagePath('public');
+            if (!@symlink($target, $publicStorage) && !is_dir($publicStorage)) {
+                mkdir($publicStorage, 0775, true);
+            }
+        }
+    }
+
+    private function cleanupTemporaryStorage(): void
+    {
+        $lifetime = (int) $this->config->get('storage.temporary_lifetime', 3600);
+        $cutoff = time() - max(60, $lifetime);
+
+        foreach (glob($this->storagePath('temporary/*')) ?: [] as $file) {
+            if (is_file($file) && (filemtime($file) ?: time()) < $cutoff) {
+                @unlink($file);
+            }
+        }
+    }
+
     private function loadConfig(): array
     {
-        $cached = $this->storagePath('framework/config/config.php');
-        if (is_file($cached)) {
-            return require $cached;
-        }
-
-        $items = [];
-        foreach (glob($this->basePath('config/*.php')) ?: [] as $file) {
-            $items[basename($file, '.php')] = require $file;
-        }
-
-        return $items;
+        return ConfigLoader::load($this->basePath(), $this->storagePath());
     }
 }

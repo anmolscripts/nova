@@ -127,6 +127,44 @@ return array (
     ),
     'regex' => '#^/dashboard$#',
   ),
+  '/login' => 
+  array (
+    'path' => 'app/login',
+    'template' => 'page.latte',
+    'server' => 'page.php',
+    'layouts' => 
+    array (
+      0 => 'app/layout.latte',
+    ),
+    'assets' => 
+    array (
+    ),
+    'loading' => NULL,
+    'error' => NULL,
+    'routeParameters' => 
+    array (
+    ),
+    'regex' => '#^/login$#',
+  ),
+  '/protected' => 
+  array (
+    'path' => 'app/protected',
+    'template' => 'page.latte',
+    'server' => 'page.php',
+    'layouts' => 
+    array (
+      0 => 'app/layout.latte',
+    ),
+    'assets' => 
+    array (
+    ),
+    'loading' => NULL,
+    'error' => NULL,
+    'routeParameters' => 
+    array (
+    ),
+    'regex' => '#^/protected$#',
+  ),
   '/users' => 
   array (
     'path' => 'app/users',

@@ -81,6 +81,24 @@ return array (
   ),
   8 => 
   array (
+    'uri' => '/login',
+    'regex' => '#^/login$#',
+    'parameters' => 
+    array (
+    ),
+    'priority' => 10001,
+  ),
+  9 => 
+  array (
+    'uri' => '/protected',
+    'regex' => '#^/protected$#',
+    'parameters' => 
+    array (
+    ),
+    'priority' => 10001,
+  ),
+  10 => 
+  array (
     'uri' => '/users',
     'regex' => '#^/users$#',
     'parameters' => 
@@ -88,7 +106,7 @@ return array (
     ),
     'priority' => 10001,
   ),
-  9 => 
+  11 => 
   array (
     'uri' => '/',
     'regex' => '#^/$#',

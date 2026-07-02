@@ -6,6 +6,9 @@ namespace Nova\Middleware;
 
 use Nova\Application\Application;
 
+/**
+ * Passes a value through a middleware stack.
+ */
 final class Pipeline
 {
     private mixed $passable;

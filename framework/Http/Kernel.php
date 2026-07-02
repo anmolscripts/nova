@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace Nova\Http;
 
 use Nova\Application\Application;
+use Nova\Exceptions\ErrorHandler;
 use Nova\Exceptions\HttpException;
 use Nova\Middleware\Pipeline;
 use Nova\Routing\Router;
 
+/**
+ * Runs the HTTP request through Nova middleware and routing.
+ */
 final class Kernel
 {
     public function __construct(private readonly Application $app)
@@ -18,30 +22,32 @@ final class Kernel
     public function handle(Request $request): Response
     {
         $this->app->setRequest($request);
+        $this->app->profiler()->start();
+        $this->app->profiler()->record('application.boot');
 
         try {
+            $this->app->profiler()->record('request.received');
             $middleware = $this->app->config()->get('middleware.global', []);
-            return (new Pipeline($this->app))
+            $response = (new Pipeline($this->app))
                 ->send($request)
                 ->through($middleware)
                 ->then(fn (Request $request) => $this->app->make(Router::class)->dispatch($request));
+
+            $this->app->profiler()->record('response.generated');
+            return $response;
         } catch (HttpException $exception) {
-            return $this->error($request, $exception->status(), $exception->getMessage());
+            return $this->renderError($request, $exception);
         } catch (\Throwable $exception) {
-            $this->app->logger()->error($exception->getMessage(), ['exception' => $exception::class]);
-            if ($this->app->config()->get('app.debug', false)) {
-                return $this->error($request, 500, $exception->getMessage() . "\n\n" . $exception->getTraceAsString());
-            }
-            return $this->error($request, 500, 'Server Error');
+            return $this->renderError($request, $exception);
+        } finally {
+            $this->app->profiler()->record('response.sent');
+            $this->app->profiler()->finish();
         }
     }
 
-    private function error(Request $request, int $status, string $message): Response
+    private function renderError(Request $request, \Throwable $exception): Response
     {
-        if ($request->expectsJson()) {
-            return json(['error' => $message ?: 'Error', 'status' => $status], $status);
-        }
-
-        return response('<h1>' . $status . '</h1><pre>' . htmlspecialchars($message ?: 'Error', ENT_QUOTES, 'UTF-8') . '</pre>', $status);
+        $handler = new ErrorHandler($this->app);
+        return $handler->render($exception);
     }
 }

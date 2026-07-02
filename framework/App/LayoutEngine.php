@@ -7,6 +7,9 @@ namespace Nova\App;
 use Nova\Application\Application;
 use Nova\View\LatteEngine;
 
+/**
+ * Resolves layouts for discovered Nova pages.
+ */
 final class LayoutEngine
 {
     public function __construct(private readonly Application $app)

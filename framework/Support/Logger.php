@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Nova\Support;
 
+/**
+ * Writes application log entries.
+ */
 final class Logger
 {
     public function __construct(private readonly string $path)

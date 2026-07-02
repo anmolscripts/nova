@@ -6,6 +6,9 @@ namespace Nova\Config;
 
 use Nova\Support\Arr;
 
+/**
+ * Stores loaded configuration values.
+ */
 final class Repository
 {
     public function __construct(private array $items)

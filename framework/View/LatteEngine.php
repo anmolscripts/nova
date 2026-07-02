@@ -9,6 +9,9 @@ use Latte\Loaders\FileLoader;
 use Nova\Application\Application;
 use Nova\Component\ComponentEngine;
 
+/**
+ * Renders Latte templates for Nova views.
+ */
 final class LatteEngine
 {
     private Engine $latte;
@@ -26,11 +29,19 @@ final class LatteEngine
         $this->latte->addFunction('errors', fn (?string $key = null, mixed $default = []): mixed => errors($key, $default));
         $this->latte->addFunction('session', fn (?string $key = null, mixed $value = null): mixed => func_num_args() >= 2 ? session($key, $value) : session($key));
         $this->latte->addFunction('flash', fn (?string $key = null, mixed $value = null): mixed => func_num_args() >= 2 ? flash($key, $value) : flash($key));
+        $this->latte->addFunction('auth', fn (): bool => auth());
+        $this->latte->addFunction('user', fn (): ?array => user());
+        $this->latte->addFunction('guest', fn (): bool => guest());
+        $this->latte->addFunction('check', fn (): bool => check());
+        $this->latte->addFunction('id', fn (): mixed => id());
+        $this->latte->addFunction('can', fn (string $ability, mixed $subject, mixed $user = null): bool => can($ability, $subject, $user));
+        $this->latte->addFunction('cannot', fn (string $ability, mixed $subject, mixed $user = null): bool => cannot($ability, $subject, $user));
     }
 
     public function render(string $template, array $data = [], ?string $layout = null): string
     {
         $template = $this->normalizeTemplate($template);
+        $data += ['user' => user()];
 
         if ($layout !== null) {
             $content = $this->latte->renderToString($template, $data);
@@ -45,7 +56,7 @@ final class LatteEngine
         try {
             $this->normalizeTemplate($name);
             return true;
-        } catch (\RuntimeException) {
+        } catch (ViewException) {
             return false;
         }
     }
@@ -68,7 +79,7 @@ final class LatteEngine
             }
         }
 
-        throw new \RuntimeException("Latte template [{$name}] not found.");
+        throw new ViewException("Latte template [{$name}] not found.");
     }
 
     private function relativeToBase(string $path): string

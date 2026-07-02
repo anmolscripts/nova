@@ -6,10 +6,14 @@ namespace Nova\Container;
 
 use ReflectionClass;
 
+/**
+ * Resolves services from Nova dependency bindings.
+ */
 class Container
 {
     private array $bindings = [];
     private array $instances = [];
+    private static array $reflectors = [];
 
     public function bind(string $abstract, callable|string|null $concrete = null): void
     {
@@ -32,6 +36,13 @@ class Container
             return $this->instances[$abstract];
         }
 
+        if ($abstract !== \Nova\Support\Profiler::class) {
+            $profile = $this->instanceOfProfiler();
+            if ($profile !== null) {
+                $profile->record('container.resolve:' . $abstract);
+            }
+        }
+
         $binding = $this->bindings[$abstract] ?? ['concrete' => $abstract, 'shared' => false];
         $object = is_callable($binding['concrete'])
             ? $binding['concrete']($this)
@@ -46,7 +57,12 @@ class Container
 
     private function build(string $class): object
     {
-        $reflector = new ReflectionClass($class);
+        $profile = $this->instanceOfProfiler();
+        if ($profile !== null) {
+            $profile->record('container.build:' . $class);
+        }
+
+        $reflector = self::$reflectors[$class] ??= new ReflectionClass($class);
         $constructor = $reflector->getConstructor();
 
         if (!$constructor) {
@@ -56,7 +72,7 @@ class Container
         $dependencies = [];
         foreach ($constructor->getParameters() as $parameter) {
             $type = $parameter->getType();
-            if ($type && !$type->isBuiltin()) {
+            if ($type instanceof \ReflectionNamedType && !$type->isBuiltin()) {
                 $dependencies[] = $this->make($type->getName());
                 continue;
             }
@@ -64,9 +80,18 @@ class Container
                 $dependencies[] = $parameter->getDefaultValue();
                 continue;
             }
-            throw new \RuntimeException("Cannot resolve {$parameter->getName()} for {$class}");
+            throw new ContainerException("Cannot resolve {$parameter->getName()} for {$class}");
         }
 
         return $reflector->newInstanceArgs($dependencies);
+    }
+
+    private function instanceOfProfiler(): ?\Nova\Support\Profiler
+    {
+        if (!$this instanceof \Nova\Application\Application) {
+            return null;
+        }
+
+        return $this->instances[\Nova\Support\Profiler::class] ?? null;
     }
 }

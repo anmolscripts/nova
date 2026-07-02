@@ -6,8 +6,14 @@ namespace Nova\Routing;
 
 use Nova\Application\Application;
 
+/**
+ * Loads application routes from discovered pages.
+ */
 final class RouteLoader
 {
+    /** @var Route[]|null */
+    private ?array $routes = null;
+
     public function __construct(private readonly Application $app)
     {
     }
@@ -15,12 +21,16 @@ final class RouteLoader
     /** @return Route[] */
     public function load(): array
     {
-        $cached = $this->app->storagePath('framework/routes/routes.php');
-        if (is_file($cached)) {
-            return require $cached;
+        if ($this->routes !== null) {
+            return $this->routes;
         }
 
-        return $this->discover();
+        $cached = $this->app->storagePath('framework/routes/routes.php');
+        if (is_file($cached)) {
+            return $this->routes = require $cached;
+        }
+
+        return $this->routes = $this->discover();
     }
 
     /** @return Route[] */

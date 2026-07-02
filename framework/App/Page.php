@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Nova\App;
 
+/**
+ * Describes a discovered Nova page.
+ */
 final class Page
 {
     public function __construct(

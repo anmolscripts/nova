@@ -6,6 +6,9 @@ namespace Nova\View;
 
 use Nova\Application\Application;
 
+/**
+ * Generates Vite asset tags.
+ */
 final class Asset
 {
     private ?bool $devServerAvailable = null;

@@ -10,6 +10,9 @@ use Nova\Http\Request;
 use Nova\Http\Response;
 use Nova\Validation\ValidationException;
 
+/**
+ * Executes Nova server actions and normalizes their responses.
+ */
 final class ActionEngine
 {
     public function __construct(private readonly Application $app)

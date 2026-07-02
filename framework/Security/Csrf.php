@@ -6,6 +6,9 @@ namespace Nova\Security;
 
 use Nova\Session\SessionManager;
 
+/**
+ * Creates and verifies CSRF tokens.
+ */
 final class Csrf
 {
     public function __construct(private readonly SessionManager $session)

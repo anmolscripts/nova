@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Nova\App;
 
+/**
+ * Describes a discovered page layout.
+ */
 final class Layout
 {
     public function __construct(

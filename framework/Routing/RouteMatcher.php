@@ -8,8 +8,14 @@ use Nova\App\Page;
 use Nova\App\PageDiscovery;
 use Nova\Application\Application;
 
+/**
+ * Matches request paths to discovered routes.
+ */
 final class RouteMatcher
 {
+    private ?array $routes = null;
+    private ?array $pagesByUri = null;
+
     public function __construct(private readonly Application $app)
     {
     }
@@ -43,19 +49,24 @@ final class RouteMatcher
         }
 
         file_put_contents($path, "<?php\n\nreturn " . var_export($this->buildRoutes(), true) . ";\n");
+        $this->routes = null;
     }
 
     private function routes(): array
     {
+        if ($this->routes !== null) {
+            return $this->routes;
+        }
+
         $cache = $this->cachePath();
         if (is_file($cache)) {
-            return require $cache;
+            return $this->routes = require $cache;
         }
 
         $routes = $this->buildRoutes();
         $this->writeCache();
 
-        return $routes;
+        return $this->routes = $routes;
     }
 
     private function buildRoutes(): array
@@ -101,13 +112,14 @@ final class RouteMatcher
 
     private function pageFor(string $uri): ?Page
     {
-        foreach ($this->app->make(PageDiscovery::class)->pages() as $page) {
-            if ($page->uri === $uri) {
-                return $page;
+        if ($this->pagesByUri === null) {
+            $this->pagesByUri = [];
+            foreach ($this->app->make(PageDiscovery::class)->pages() as $page) {
+                $this->pagesByUri[$page->uri] = $page;
             }
         }
 
-        return null;
+        return $this->pagesByUri[$uri] ?? null;
     }
 
     private function parameters(array $routeParameters, array $matches): array

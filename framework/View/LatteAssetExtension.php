@@ -6,6 +6,9 @@ namespace Nova\View;
 
 use Latte\Extension;
 
+/**
+ * Registers Nova asset tags with Latte.
+ */
 final class LatteAssetExtension extends Extension
 {
     public function getTags(): array

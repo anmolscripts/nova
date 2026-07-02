@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Nova\Database;
 
+/**
+ * Resolves configured database connections.
+ */
 final class DatabaseManager
 {
     private array $connections = [];

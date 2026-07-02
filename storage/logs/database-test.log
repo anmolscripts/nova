@@ -1,0 +1,21 @@
+{"sql":"CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, status TEXT NOT NULL, age INTEGER NOT NULL)","bindings":[],"time_ms":0.577}
+{"sql":"INSERT INTO users (name, status, age) VALUES (?, ?, ?)","bindings":["Ada","ACTIVE",36],"time_ms":0.243}
+{"sql":"INSERT INTO users (name, status, age) VALUES (?, ?, ?)","bindings":["Linus","ACTIVE",55],"time_ms":0.148}
+{"sql":"INSERT INTO users (name, status, age) VALUES (?, ?, ?)","bindings":["Grace","INACTIVE",40],"time_ms":0.121}
+{"sql":"SELECT * FROM users WHERE status = ? ORDER BY id","bindings":["ACTIVE"],"time_ms":0.081}
+{"sql":"SELECT * FROM users WHERE name = ?","bindings":["Ada"],"time_ms":0.087}
+{"sql":"SELECT COUNT(*) FROM users WHERE status = ?","bindings":["ACTIVE"],"time_ms":0.08}
+{"sql":"SELECT name, age FROM users WHERE status = ? AND name IN (?, ?) ORDER BY age DESC LIMIT 1 OFFSET 0","bindings":["ACTIVE","Ada","Linus"],"time_ms":0.137}
+{"sql":"SELECT COUNT(*) FROM users WHERE name = ? OR name = ?","bindings":["Ada","Grace"],"time_ms":0.069}
+{"sql":"SELECT status, COUNT(*) AS total FROM users GROUP BY status ORDER BY status ASC","bindings":[],"time_ms":0.07}
+{"sql":"SELECT 1 FROM users WHERE name = ? LIMIT 1","bindings":["Ada"],"time_ms":0.051}
+{"sql":"SELECT * FROM users WHERE name = ? LIMIT 1","bindings":["Missing"],"time_ms":0.05}
+{"sql":"UPDATE users SET status = ? WHERE name = ?","bindings":["INACTIVE","Linus"],"time_ms":0.096}
+{"sql":"DELETE FROM users WHERE name = ?","bindings":["Grace"],"time_ms":0.07}
+{"sql":"INSERT INTO users (name, status, age) VALUES (?, ?, ?)","bindings":["Transaction","ACTIVE",1],"time_ms":0.058}
+{"sql":"SELECT 1 FROM users WHERE name = ? LIMIT 1","bindings":["Transaction"],"time_ms":0.054}
+{"sql":"INSERT INTO users (name, status, age) VALUES (?, ?, ?)","bindings":["Rollback","ACTIVE",1],"time_ms":0.06}
+{"sql":"SELECT 1 FROM users WHERE name = ? LIMIT 1","bindings":["Rollback"],"time_ms":0.093}
+{"sql":"INSERT INTO users (name, status, age) VALUES (?, ?, ?)","bindings":["Manual","ACTIVE",1],"time_ms":0.06}
+{"sql":"SELECT 1 FROM users WHERE name = ? LIMIT 1","bindings":["Manual"],"time_ms":0.055}
+{"sql":"SELECT sp_add(?, ?) AS result","bindings":[2,3],"time_ms":0.053}

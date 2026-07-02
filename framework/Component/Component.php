@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Nova\Component;
 
+/**
+ * Describes a discovered Nova component.
+ */
 final class Component
 {
     public function __construct(

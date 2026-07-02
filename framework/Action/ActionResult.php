@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Nova\Action;
 
+/**
+ * Carries a structured server action result payload.
+ */
 final class ActionResult
 {
     public function __construct(

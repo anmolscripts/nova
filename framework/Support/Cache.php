@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Nova\Support;
 
+/**
+ * Provides simple file-backed cache storage.
+ */
 final class Cache
 {
     public function __construct(private readonly string $path)

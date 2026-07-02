@@ -6,8 +6,14 @@ namespace Nova\Component;
 
 use Nova\Application\Application;
 
+/**
+ * Discovers component directories and metadata.
+ */
 final class ComponentDiscovery
 {
+    /** @var array<string, Component>|null */
+    private ?array $components = null;
+
     public function __construct(private readonly Application $app)
     {
     }
@@ -38,14 +44,18 @@ final class ComponentDiscovery
     public function components(): array
     {
         $manifest = $this->manifestPath();
+        $this->profile('component.discovery.start');
+
         if (is_file($manifest)) {
-            return $this->hydrate(require $manifest);
+            $this->profile('component.manifest.read');
+            return $this->components = $this->hydrate(require $manifest);
         }
 
         $components = $this->discover();
+        $this->profile('component.manifest.write');
         $this->writeManifest($components);
 
-        return $components;
+        return $this->components = $components;
     }
 
     /** @return array<string, Component> */
@@ -64,6 +74,7 @@ final class ComponentDiscovery
         }
 
         file_put_contents($path, "<?php\n\nreturn " . var_export($this->manifestRows($components), true) . ";\n");
+        $this->components = $components;
     }
 
     /** @return array<string, Component> */
@@ -201,6 +212,13 @@ final class ComponentDiscovery
     private function manifestPath(): string
     {
         return $this->app->storagePath('framework/components.php');
+    }
+
+    private function profile(string $name): void
+    {
+        if (method_exists($this->app, 'profiler')) {
+            $this->app->profiler()->record($name);
+        }
     }
 
     private function file(string $directory, string $name): ?string

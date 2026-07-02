@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Nova\Exceptions;
 
-final class HttpException extends \RuntimeException
+/**
+ * Represents an HTTP error response.
+ */
+final class HttpException extends NovaException
 {
     public function __construct(private readonly int $status, ?string $message = null)
     {

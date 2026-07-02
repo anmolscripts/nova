@@ -9,7 +9,11 @@ use Nova\Exceptions\HttpException;
 use Nova\Http\Response;
 use Nova\View\Asset;
 use Nova\View\LatteEngine;
+use Nova\View\ViewException;
 
+/**
+ * Renders matched Nova pages into HTTP responses.
+ */
 final class PageRenderer
 {
     public function __construct(private readonly Application $app)
@@ -30,7 +34,7 @@ final class PageRenderer
 
         $data = require $page->serverFile;
         if (!is_array($data)) {
-            throw new \RuntimeException('Page server file must return an array.');
+            throw new ViewException('Page server file must return an array.');
         }
 
         $data = array_merge($routeParameters, $data);

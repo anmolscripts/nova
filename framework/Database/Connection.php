@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Nova\Database;
 
+/**
+ * Wraps a PDO database connection.
+ */
 final class Connection
 {
     public function __construct(
@@ -74,12 +77,14 @@ final class Connection
     public function statement(string $sql, array $bindings = []): \PDOStatement
     {
         $started = microtime(true);
+        $this->profile('database.query:' . substr($sql, 0, 80));
 
         try {
             $statement = $this->pdo->prepare($sql);
             $this->bind($statement, $bindings);
             $statement->execute();
             $this->log($sql, $bindings, $started);
+            $this->profileDatabaseQuery($started);
 
             return $statement;
         } catch (\PDOException $exception) {
@@ -221,6 +226,24 @@ final class Connection
         $columns = implode(', ', array_map(fn (string $name): string => '@' . $name . ' AS ' . $name, $names));
 
         return $this->first('SELECT ' . $columns) ?? [];
+    }
+
+    private function profile(string $name): void
+    {
+        if (method_exists($this->pdo, 'getAttribute')) {
+            $app = \Nova\Application\Application::class;
+        }
+    }
+
+    private function profileDatabaseQuery(float $started): void
+    {
+        if (!method_exists($this->pdo, 'getAttribute')) {
+            return;
+        }
+
+        $profile = app()->profiler();
+        $profile->record('database.query.completed');
+        $profile->profile()->incrementQueryCount(round((microtime(true) - $started) * 1000, 6));
     }
 
     private function log(string $sql, array $bindings, float $started): void

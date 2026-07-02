@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Nova\Validation;
 
+use Nova\Storage\Security\FileGuard;
 use Nova\Support\Arr;
 
+/**
+ * Validates data against Nova validation rules.
+ */
 final class Validator
 {
     private array $errors = [];
@@ -69,6 +73,7 @@ final class Validator
             'file' => $this->isFile($value),
             'image' => $this->isImage($value),
             'mimes' => $this->hasMime($value, (string) $argument),
+            'extensions' => $this->hasExtension($value, (string) $argument),
             default => true,
         };
 
@@ -85,6 +90,10 @@ final class Validator
 
         if (is_array($value)) {
             return count($value);
+        }
+
+        if ($this->isFile($value)) {
+            return ((float) ($value->size ?? 0)) / 1024;
         }
 
         return (float) mb_strlen((string) $value);
@@ -105,15 +114,41 @@ final class Validator
 
     private function isFile(mixed $value): bool
     {
-        return is_object($value) && method_exists($value, 'isValid') && $value->isValid();
+        return is_object($value)
+            && method_exists($value, 'isValid')
+            && $value->isValid()
+            && FileGuard::extensionAllowed((string) ($value->name ?? ''));
     }
 
     private function isImage(mixed $value): bool
     {
-        return $this->isFile($value) && str_starts_with((string) ($value->type ?? ''), 'image/');
+        if (!$this->isFile($value)) {
+            return false;
+        }
+
+        $mime = method_exists($value, 'mime') ? (string) $value->mime() : (string) ($value->type ?? '');
+
+        return str_starts_with($mime, 'image/');
     }
 
     private function hasMime(mixed $value, string $argument): bool
+    {
+        if (!$this->isFile($value)) {
+            return false;
+        }
+
+        $mime = strtolower(method_exists($value, 'mime') ? (string) $value->mime() : (string) ($value->type ?? ''));
+        $allowed = array_map('strtolower', explode(',', $argument));
+        foreach ($allowed as $allowedMime) {
+            if (str_contains($allowedMime, '/') && $mime === $allowedMime) {
+                return true;
+            }
+        }
+
+        return $this->hasExtension($value, $argument);
+    }
+
+    private function hasExtension(mixed $value, string $argument): bool
     {
         if (!$this->isFile($value)) {
             return false;

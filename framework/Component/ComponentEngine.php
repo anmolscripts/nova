@@ -8,6 +8,9 @@ use Nova\Application\Application;
 use Nova\View\Asset;
 use Nova\View\LatteEngine;
 
+/**
+ * Resolves and renders Nova components.
+ */
 final class ComponentEngine
 {
     private array $emittedAssets = [];

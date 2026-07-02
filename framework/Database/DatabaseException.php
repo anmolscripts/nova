@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Nova\Database;
 
-final class DatabaseException extends \RuntimeException
+/**
+ * Represents a database operation failure.
+ */
+final class DatabaseException extends \Nova\Exceptions\NovaException
 {
     public static function fromThrowable(\Throwable $throwable, string $sql = '', array $bindings = []): self
     {

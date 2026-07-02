@@ -9,6 +9,9 @@ use Latte\Compiler\Nodes\StatementNode;
 use Latte\Compiler\PrintContext;
 use Latte\Compiler\Tag;
 
+/**
+ * Compiles Nova component tags in Latte templates.
+ */
 final class LatteComponentNode extends StatementNode
 {
     private ArrayNode $arguments;

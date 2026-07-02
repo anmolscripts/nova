@@ -33,15 +33,25 @@
             |-- page.php
     |-- layout.latte
     |-- layout.php
+    |-- login
+        |-- middleware.php
+        |-- page.latte
+        |-- page.php
     |-- page.latte
     |-- page.php
     |-- page.scss
     |-- page.ts
+    |-- policies
+        |-- ProductPolicy.php
     |-- products
         |-- [category]
             |-- [product]
                 |-- page.latte
                 |-- page.php
+    |-- protected
+        |-- middleware.php
+        |-- page.latte
+        |-- page.php
     |-- users
         |-- actions
             |-- save.php
@@ -83,16 +93,21 @@
 |-- composer.lock
 |-- config
     |-- app.php
+    |-- auth.php
     |-- cache.php
     |-- database.php
     |-- middleware.php
     |-- session.php
+    |-- storage.php
+    |-- ui.php
     |-- view.php
 |-- database
     |-- migrations
         |-- .gitkeep
     |-- procedures
         |-- .gitkeep
+|-- docs
+    |-- API_REVIEW.md
 |-- framework
     |-- Action
         |-- Action.php
@@ -115,27 +130,53 @@
         |-- ComponentEngine.php
         |-- ComponentException.php
     |-- Config
+        |-- ConfigLoader.php
         |-- Repository.php
     |-- Console
         |-- Console.php
+        |-- Optimization
+            |-- AssetCompiler.php
+            |-- CompilerInterface.php
+            |-- CompilerRegistry.php
+            |-- ComponentCompiler.php
+            |-- ConfigCompiler.php
+            |-- LayoutCompiler.php
+            |-- OptimizingPipeline.php
+            |-- PageCompiler.php
+            |-- RouteCompiler.php
+            |-- ViewCompiler.php
     |-- Container
         |-- Container.php
+        |-- ContainerException.php
     |-- Database
         |-- Connection.php
         |-- DatabaseException.php
         |-- DatabaseManager.php
         |-- QueryBuilder.php
     |-- Exceptions
+        |-- AuthorizationException.php
+        |-- ConfigurationException.php
+        |-- ConsoleException.php
+        |-- ErrorHandler.php
         |-- HttpException.php
+        |-- LayoutException.php
+        |-- MiddlewareException.php
+        |-- NovaException.php
     |-- Http
+        |-- DownloadResponse.php
         |-- Kernel.php
         |-- RedirectResponse.php
         |-- Request.php
         |-- Response.php
+        |-- ResponseException.php
         |-- UploadedFile.php
     |-- Middleware
+        |-- Authenticate.php
         |-- DispatchServerAction.php
+        |-- PageMiddleware.php
         |-- Pipeline.php
+        |-- RedirectIfAuthenticated.php
+        |-- RestoreRememberedUser.php
         |-- StartSession.php
         |-- VerifyCsrfToken.php
     |-- Routing
@@ -144,15 +185,41 @@
         |-- RouteMatch.php
         |-- RouteMatcher.php
         |-- Router.php
+        |-- RoutingException.php
     |-- Security
+        |-- AuthenticationException.php
         |-- AuthManager.php
         |-- Csrf.php
+        |-- DatabaseUserProvider.php
+        |-- PolicyGate.php
+        |-- UserProvider.php
     |-- Session
         |-- SessionManager.php
+    |-- Storage
+        |-- Contracts
+            |-- StorageDriver.php
+        |-- Disk.php
+        |-- Drivers
+            |-- LocalDriver.php
+            |-- MemoryDriver.php
+            |-- PublicDriver.php
+        |-- Image.php
+        |-- PathNormalizer.php
+        |-- Security
+            |-- FileGuard.php
+        |-- StorageException.php
+        |-- StorageManager.php
+        |-- StoragePathException.php
+        |-- UploadFile.php
     |-- Support
         |-- Arr.php
         |-- Cache.php
         |-- Logger.php
+        |-- MemoryTracker.php
+        |-- Profile.php
+        |-- ProfileEntry.php
+        |-- Profiler.php
+        |-- Timer.php
     |-- Validation
         |-- ErrorBag.php
         |-- ValidationException.php
@@ -163,6 +230,7 @@
         |-- LatteAssetNode.php
         |-- LatteComponentNode.php
         |-- LatteEngine.php
+        |-- ViewException.php
         |-- ViewFactory.php
         |-- ViewResponse.php
 |-- nova
@@ -191,8 +259,8 @@
                     |-- page-D_uJuN2E.css
                     |-- page.ts-DMFc3Li_.js
                     |-- page.ts-DMFc3Li_.js.map
-        |-- app-BATBt8hA.js
-        |-- app-BATBt8hA.js.map
+        |-- app-qNagGkyI.js
+        |-- app-qNagGkyI.js.map
         |-- components
             |-- Button
                 |-- component-Br3m8HST.css
@@ -207,7 +275,13 @@
         |-- manifest.json
         |-- styles-CDw5EeeU.css
     |-- index.php
+    |-- storage
+        |-- .gitkeep
 |-- resources
+    |-- errors
+        |-- 404.latte
+        |-- 500.latte
+        |-- debug.latte
     |-- scss
         |-- abstracts
             |-- _mixins.scss
@@ -231,6 +305,16 @@
         |-- helpers
             |-- .gitkeep
             |-- action.ts
+        |-- nova
+            |-- action.ts
+            |-- dom.ts
+            |-- events.ts
+            |-- index.ts
+            |-- loader.ts
+            |-- modal.ts
+            |-- request.ts
+            |-- response.ts
+            |-- toast.ts
         |-- pages
             |-- .gitkeep
         |-- vite-env.d.ts
@@ -240,37 +324,141 @@
         |-- welcome.nova.php
 |-- storage
     |-- .gitkeep
+    |-- app
+        |-- .gitkeep
+        |-- documents
     |-- framework
         |-- .gitkeep
         |-- components.php
         |-- config
             |-- .gitkeep
+            |-- config.php
+        |-- layouts.php
         |-- pages.php
         |-- routes
             |-- .gitkeep
         |-- routes.php
         |-- views
             |-- .gitkeep
+            |-- admin-reports-layout.latte--33cec31122.php
+            |-- admin-reports-layout.latte--33cec31122.php.lock
+            |-- app-about-page.latte--98ada7f683.php
+            |-- app-about-page.latte--98ada7f683.php.lock
+            |-- app-admin-layout.latte--ad38748989.php
+            |-- app-admin-layout.latte--ad38748989.php.lock
+            |-- app-dashboard-page.latte--3b5a02ee21.php
+            |-- app-dashboard-page.latte--3b5a02ee21.php.lock
+            |-- app-layout.latte--290ce34d2a.php
+            |-- app-layout.latte--290ce34d2a.php.lock
+            |-- app-login-page.latte--dc2007d625.php
+            |-- app-login-page.latte--dc2007d625.php.lock
+            |-- app-page.latte--3784408c60.php
+            |-- app-page.latte--3784408c60.php.lock
+            |-- app-protected-page.latte--a8eb8e3a77.php
+            |-- app-protected-page.latte--a8eb8e3a77.php.lock
+            |-- app-users-layout.latte--a02b3f2950.php
+            |-- app-users-layout.latte--a02b3f2950.php.lock
+            |-- app-users-page.latte--9c22466780.php
+            |-- app-users-page.latte--9c22466780.php.lock
+            |-- components-Button-component.latte--fc1bf95957.php
+            |-- components-Button-component.latte--fc1bf95957.php.lock
+            |-- components-Card-component.latte--e477001541.php
+            |-- components-Card-component.latte--e477001541.php.lock
+            |-- components-Icon-component.latte--3a5b28a46e.php
+            |-- components-Icon-component.latte--3a5b28a46e.php.lock
+            |-- components-StatsCard-component.latte--a408cf02b8.php
+            |-- components-StatsCard-component.latte--a408cf02b8.php.lock
+            |-- components-StatsCard-component.latte--f3f4d385c3.php
+            |-- components-StatsCard-component.latte--f3f4d385c3.php.lock
             |-- d41cc4489f02afc5fb0a0e6e57ffaba120a17702.php
+            |-- orders-page.latte--54057c0342.php
+            |-- orders-page.latte--54057c0342.php.lock
+            |-- page.latte--19ce2a89f1.php
+            |-- page.latte--19ce2a89f1.php.lock
+            |-- page.latte--4a2286d2a3.php
+            |-- page.latte--4a2286d2a3.php.lock
+            |-- page.latte--66dc5f7c82.php
+            |-- page.latte--66dc5f7c82.php.lock
+            |-- page.latte--8416244474.php
+            |-- page.latte--8416244474.php.lock
+            |-- reports-sales-page.latte--094342bbde.php
+            |-- reports-sales-page.latte--094342bbde.php.lock
+            |-- resources-errors-404.latte--0e63717044.php
+            |-- resources-errors-404.latte--0e63717044.php.lock
+            |-- resources-errors-500.latte--97f37a428d.php
+            |-- resources-errors-500.latte--97f37a428d.php.lock
+            |-- resources-views-layout.latte--aba17fd7d0.php
+            |-- resources-views-layout.latte--aba17fd7d0.php.lock
+            |-- resources-views-welcome.latte--7815ef65f1.php
+            |-- resources-views-welcome.latte--7815ef65f1.php.lock
+            |-- tests-fixtures-validation.latte--7af6eb8da5.php
+            |-- tests-fixtures-validation.latte--7af6eb8da5.php.lock
+    |-- public
+        |-- .gitkeep
+        |-- avatars
     |-- sessions
         |-- sess_16a4ebd0aaab121fb50447ac922bc9bf
         |-- sess_19b8241468b94e585eea594b726f48b3
+        |-- sess_1d90a322890d6d5c8ac133082303e59c
+        |-- sess_2c984a721b358be67ee5b0968526ed40
         |-- sess_4282a9331461be2324b094da0f383822
         |-- sess_623334e69bc1c02434430b4a03369485
+        |-- sess_649ef5f64070d44cf1084f5efa393a83
+        |-- sess_663ada3324de0905f51776555b919edd
         |-- sess_8afc065bd466072338715a47a388d88f
         |-- sess_a1c10a18f098bfceb4561a784b046095
+        |-- sess_b374ca0b03339fe9d78b226357bb066a
+        |-- sess_b96b94f20d230015f9380ad7ded93687
+        |-- sess_c1a97cf7e96df8873ba64a5bb8ebab5b
         |-- sess_c9e584bc078faa4c766bb989da7baab8
+        |-- sess_ca9f838c988585e38205ea91d7b68d1a
         |-- sess_cd3e2f74ab74480c19781430248b82f6
         |-- sess_f1c2edf442708e56b6319b028cff5b3b
+        |-- sess_f492d6572cff4edd4c4c594e7c57e6c3
         |-- sess_faa1b7062954f962a3069d517a55ca9b
+    |-- temporary
+        |-- .gitkeep
+        |-- 1424bd916c1f7c7d1dc706f58ca8930cbcefcef1.txt
+    |-- uploads
+        |-- .gitkeep
+|-- stubs
+    |-- action
+        |-- action.php
+    |-- component
+        |-- component.latte
+        |-- component.php
+        |-- component.scss
+        |-- component.ts
+    |-- middleware
+        |-- middleware.php
+    |-- migration
+        |-- migration.php
+    |-- page
+        |-- middleware.php
+        |-- page.latte
+        |-- page.php
+        |-- page.scss
+        |-- page.ts
+    |-- policy
+        |-- policy.php
+    |-- procedure
+        |-- procedure.sql
+    |-- seeder
+        |-- seeder.php
 |-- tests
+    |-- AuthSmoke.php
+    |-- CliSmoke.php
     |-- ComponentEngineSmoke.php
     |-- DatabaseEngineSmoke.php
     |-- fixtures
         |-- validation.latte
     |-- LayoutEngineSmoke.php
+    |-- OptimizeCommandSmoke.php
+    |-- ProfilerSmoke.php
     |-- RouteMatcherSmoke.php
     |-- ServerActionSmoke.php
+    |-- StorageEngineSmoke.php
+    |-- UiEngineSmoke.php
     |-- ValidationSessionFlashSmoke.php
 |-- tsconfig.json
 |-- vendor

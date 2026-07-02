@@ -6,6 +6,9 @@ namespace Nova\View;
 
 use Nova\Http\Response;
 
+/**
+ * Renders a view when the response is sent.
+ */
 final class ViewResponse extends Response
 {
     public function __construct(private readonly ViewFactory $view, private readonly string $name, private readonly array $data = [], int $status = 200)

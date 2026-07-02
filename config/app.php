@@ -9,4 +9,15 @@ return [
     'url' => env('APP_URL', 'http://localhost:8000'),
     'timezone' => 'UTC',
     'providers' => [],
+    'optimize' => [
+        'compilers' => [
+            \Nova\Console\Optimization\ConfigCompiler::class,
+            \Nova\Console\Optimization\RouteCompiler::class,
+            \Nova\Console\Optimization\PageCompiler::class,
+            \Nova\Console\Optimization\LayoutCompiler::class,
+            \Nova\Console\Optimization\ComponentCompiler::class,
+            \Nova\Console\Optimization\ViewCompiler::class,
+            \Nova\Console\Optimization\AssetCompiler::class,
+        ],
+    ],
 ];

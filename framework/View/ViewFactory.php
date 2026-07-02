@@ -6,6 +6,9 @@ namespace Nova\View;
 
 use Nova\Application\Application;
 
+/**
+ * Creates rendered view output.
+ */
 final class ViewFactory
 {
     public function __construct(private readonly Application $app)
@@ -14,12 +17,16 @@ final class ViewFactory
 
     public function render(string $name, array $data = []): string
     {
+        $this->profile('view.render.start:' . $name);
         if ($this->app->make(LatteEngine::class)->exists($name)) {
-            return $this->app->make(LatteEngine::class)->render($name, $data);
+            $rendered = $this->app->make(LatteEngine::class)->render($name, $data);
+            $this->profile('view.render.latte:' . $name);
+            return $rendered;
         }
 
         $path = $this->resolve($name);
         $compiled = $this->compile($path);
+        $this->profile('view.render.php:' . $name);
         return $this->include($compiled, $data);
     }
 
@@ -69,7 +76,7 @@ final class ViewFactory
             }
         }
 
-        throw new \RuntimeException("View [{$name}] not found.");
+        throw new ViewException("View [{$name}] not found.");
     }
 
     private function compile(string $path): string
@@ -81,12 +88,15 @@ final class ViewFactory
 
         $compiled = $cache . DIRECTORY_SEPARATOR . sha1($path) . '.php';
         if (is_file($compiled) && filemtime($compiled) >= filemtime($path)) {
+            $this->profile('view.compiled.cached');
             return $compiled;
         }
 
+        $this->profile('view.compilation.start');
         $source = (string) file_get_contents($path);
         $php = $this->compileSource($source);
         file_put_contents($compiled, $php);
+        $this->profile('view.compilation.done');
 
         return $compiled;
     }
@@ -114,13 +124,26 @@ final class ViewFactory
         return $condition;
     }
 
+    private function profile(string $name): void
+    {
+        if (method_exists($this->app, 'profiler')) {
+            $this->app->profiler()->record($name);
+        }
+    }
+
     private function include(string $file, array $data): string
     {
         $GLOBALS['__nova_view_data'] = $data;
         extract($data, EXTR_SKIP);
         ob_start();
-        require $file;
-        unset($GLOBALS['__nova_view_data']);
-        return (string) ob_get_clean();
+        try {
+            require $file;
+            return (string) ob_get_clean();
+        } catch (\Throwable $throwable) {
+            ob_end_clean();
+            throw $throwable;
+        } finally {
+            unset($GLOBALS['__nova_view_data']);
+        }
     }
 }

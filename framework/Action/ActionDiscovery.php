@@ -6,6 +6,9 @@ namespace Nova\Action;
 
 use Nova\Application\Application;
 
+/**
+ * Discovers server action files from application pages.
+ */
 final class ActionDiscovery
 {
     public function __construct(private readonly Application $app)

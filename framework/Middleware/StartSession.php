@@ -6,6 +6,9 @@ namespace Nova\Middleware;
 
 use Nova\Http\Request;
 
+/**
+ * Middleware that starts and saves the configured session.
+ */
 final class StartSession
 {
     public function handle(Request $request, callable $next): mixed

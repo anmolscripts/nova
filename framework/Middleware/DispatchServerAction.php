@@ -8,6 +8,9 @@ use Nova\Action\ActionDiscovery;
 use Nova\Action\ActionEngine;
 use Nova\Http\Request;
 
+/**
+ * Middleware that dispatches Nova server actions.
+ */
 final class DispatchServerAction
 {
     public function handle(Request $request, callable $next): mixed

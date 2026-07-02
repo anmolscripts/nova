@@ -6,6 +6,9 @@ namespace Nova\Middleware;
 
 use Nova\Http\Request;
 
+/**
+ * Middleware that verifies CSRF tokens for unsafe requests.
+ */
 final class VerifyCsrfToken
 {
     public function handle(Request $request, callable $next): mixed

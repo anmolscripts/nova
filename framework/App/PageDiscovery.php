@@ -6,8 +6,14 @@ namespace Nova\App;
 
 use Nova\Application\Application;
 
+/**
+ * Discovers page files from the application tree.
+ */
 final class PageDiscovery
 {
+    /** @var Page[]|null */
+    private ?array $pages = null;
+
     public function __construct(private readonly Application $app)
     {
     }
@@ -16,14 +22,18 @@ final class PageDiscovery
     public function pages(): array
     {
         $manifest = $this->manifestPath();
+        $this->profile('page.discovery.start');
+
         if (is_file($manifest)) {
-            return $this->hydrate(require $manifest);
+            $this->profile('page.manifest.read');
+            return $this->pages = $this->hydrate(require $manifest);
         }
 
         $pages = $this->discover();
+        $this->profile('page.manifest.write');
         $this->writeManifest($pages);
 
-        return $pages;
+        return $this->pages = $pages;
     }
 
     public function match(string $path): ?Page
@@ -84,7 +94,9 @@ final class PageDiscovery
             $scores[] = $score;
         }
 
-        array_multisort($scores ?? [], SORT_DESC, $pages);
+        if (isset($scores)) {
+            array_multisort($scores, SORT_DESC, $pages);
+        }
 
         return $pages;
     }
@@ -99,11 +111,19 @@ final class PageDiscovery
         }
 
         file_put_contents($path, "<?php\n\nreturn " . var_export($this->manifestRows($pages), true) . ";\n");
+        $this->pages = $pages;
     }
 
     private function manifestPath(): string
     {
         return $this->app->storagePath('framework/pages.php');
+    }
+
+    private function profile(string $name): void
+    {
+        if (method_exists($this->app, 'profiler')) {
+            $this->app->profiler()->record($name);
+        }
     }
 
     /** @return Page[] */

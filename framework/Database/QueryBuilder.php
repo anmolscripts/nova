@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Nova\Database;
 
+/**
+ * Builds and executes simple database queries.
+ */
 final class QueryBuilder
 {
     private array $columns = ['*'];

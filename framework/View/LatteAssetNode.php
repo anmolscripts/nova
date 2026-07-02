@@ -9,6 +9,9 @@ use Latte\Compiler\Nodes\StatementNode;
 use Latte\Compiler\PrintContext;
 use Latte\Compiler\Tag;
 
+/**
+ * Compiles Nova asset tags in Latte templates.
+ */
 final class LatteAssetNode extends StatementNode
 {
     private ExpressionNode $entry;

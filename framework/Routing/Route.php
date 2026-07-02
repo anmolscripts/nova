@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Nova\Routing;
 
+/**
+ * Describes an application route.
+ */
 final class Route
 {
     public function __construct(

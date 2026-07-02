@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Nova\Session;
 
+/**
+ * Stores and flashes session values.
+ */
 final class SessionManager
 {
     private const SENSITIVE_OLD_INPUT = ['password', 'password_confirmation'];

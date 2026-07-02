@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Nova\Action;
 
-final class ActionException extends \RuntimeException
+/**
+ * Represents a server action failure.
+ */
+final class ActionException extends \Nova\Exceptions\NovaException
 {
 }
