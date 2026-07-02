@@ -103,7 +103,7 @@ Build Real Applications
 
 # 📑 Chapter Navigator
 
-## 🚀 Chapter 1 — Welcome
+## 🚀 [Chapter 1 — Welcome](README.md)
 
 **File**
 
@@ -123,7 +123,7 @@ Learn:
 
 ---
 
-## ⚙️ Chapter 2 — Installation
+## ⚙️ [Chapter 2 — Installation](installation.md)
 
 **File**
 
@@ -144,7 +144,7 @@ Perfect for first-time setup.
 
 ---
 
-## 📁 Chapter 3 — Project Structure
+## 📁 [Chapter 3 — Project Structure](project-structure.md)
 
 **File**
 
@@ -165,7 +165,7 @@ You'll understand how Nova thinks.
 
 ---
 
-## 📄 Chapter 4 — Creating Your First Page
+## 📄 [Chapter 4 — Creating Your First Page](first-page.md)
 
 **File**
 
@@ -186,7 +186,7 @@ Build your first real page.
 
 ---
 
-## 🏗 Chapter 5 — Layouts
+## 🏗 [Chapter 5 — Layouts](layouts.md)
 
 **File**
 
@@ -207,7 +207,7 @@ Create reusable application shells.
 
 ---
 
-## 🧩 Chapter 6 — Components
+## 🧩 [Chapter 6 — Components](components.md)
 
 **File**
 
@@ -228,7 +228,7 @@ Create reusable UI.
 
 ---
 
-## ⚡ Chapter 7 — Server Actions
+## ⚡ [Chapter 7 — Server Actions](server-actions.md)
 
 **File**
 
@@ -250,7 +250,7 @@ Replace traditional controllers with Server Actions.
 
 ---
 
-## 🗄 Chapter 8 — Database
+## 🗄 [Chapter 8 — Database](database.md)
 
 **File**
 
@@ -271,7 +271,7 @@ Build data-driven applications.
 
 ---
 
-## 🔐 Chapter 9 — Authentication
+## 🔐 [Chapter 9 — Authentication](authentication.md)
 
 **File**
 
@@ -293,7 +293,7 @@ Secure your application.
 
 ---
 
-## 🚀 Chapter 10 — Deployment
+## 🚀 [Chapter 10 — Deployment](deployment.md)
 
 **File**
 
