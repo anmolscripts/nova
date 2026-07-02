@@ -277,6 +277,7 @@
     |-- index.php
     |-- storage
         |-- .gitkeep
+|-- README.md
 |-- resources
     |-- errors
         |-- 404.latte
